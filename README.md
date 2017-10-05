@@ -9,10 +9,10 @@
 git clone https://github.com/marktiedemann/dockerlint && cd dockerlint
 
 # build image
-docker build --rm -t dockerlint .
+docker build --rm -t dockerlint:0.1.0 .
 
 # run container
-docker run --rm -it -p 3000:3000 dockerlint
+docker run --rm -it -p 3000:3000 dockerlint:0.1.0
 ```
 
 
