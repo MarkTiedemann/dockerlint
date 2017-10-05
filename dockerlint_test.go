@@ -29,18 +29,18 @@ func makeTest(t *testing.T, dockerfile string, expectedCode int, expectedBody st
 	}
 }
 
-func TestContinuationWarnings(t *testing.T) {
-	makeTest(t, "RUN \\\n\nexit", 400, `{"error":true,"messages":["Empty continuation line found in:\n    RUN exit","Empty continuation lines will become errors in a future release."]}`)
+func TestContinuationWarning(t *testing.T) {
+	makeTest(t, "RUN \\\n\nexit", 400, `{"error":true,"message":"Empty continuation line found in:\n    RUN exit. Empty continuation lines will become errors in a future release."}`)
 }
 
 func TestEmptyFile(t *testing.T) {
-	makeTest(t, "", 400, `{"error":true,"messages":["Dockerfile may not be empty"]}`)
+	makeTest(t, "", 400, `{"error":true,"message":"Dockerfile may not be empty"}`)
 }
 
 func TestParsingError(t *testing.T) {
-	makeTest(t, "FROM", 400, `{"error":true,"messages":["Dockerfile parse error line 1: FROM requires either one or three arguments"]}`)
+	makeTest(t, "FROM", 400, `{"error":true,"message":"Dockerfile parse error line 1: FROM requires either one or three arguments"}`)
 }
 
 func TestSucess(t *testing.T) {
-	makeTest(t, "FROM golang", 200, `{"error":false,"messages":[]}`)
+	makeTest(t, "FROM golang", 200, `{"error":false}`)
 }

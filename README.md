@@ -9,12 +9,11 @@
 git clone https://github.com/marktiedemann/dockerlint && cd dockerlint
 
 # build image
-docker build --rm -t dockerlint:0.1.0 .
+docker build --rm -t dockerlint:0.2.0 .
 
 # run container
-docker run --rm -it -p 3000:3000 dockerlint:0.1.0
+docker run --rm -it -p 3000:3000 dockerlint:0.2.0
 ```
-
 
 ## API
 
@@ -43,8 +42,8 @@ FROM golang
 
 **Body:** *json*, the linting result
 
-- `error`: *boolean*, whether linting errors were detected
-- `messages`: *string[]*, list of linting error messages
+- `error`: *boolean*, `true` if a linting error was detected; otherwise `false`
+- `message`: *string | undefined*, the error message, if a linting error was detected (*optional*)
 
 *Example:*
 
@@ -52,8 +51,7 @@ FROM golang
 
 ```json
 {
-  "error": false,
-  "messages": []
+  "error": false
 }
 ```
 
@@ -62,9 +60,7 @@ FROM golang
 ```json
 {
   "error": true,
-  "messages": [
-    "Dockerfile parse error line 1: FROM requires either one or three arguments"
-  ]
+  "message": "Dockerfile parse error line 1: FROM requires either one or three arguments"
 }
 ```
 

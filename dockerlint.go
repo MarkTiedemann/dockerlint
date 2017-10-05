@@ -10,9 +10,13 @@ import (
 	"github.com/docker/docker/builder/dockerfile/parser"
 )
 
-type Error struct {
-	Error    bool     `json:"error"`
-	Messages []string `json:"messages"`
+type LintResult struct {
+	Error   bool   `json:"error"`
+	Message string `json:"message,omitempty"`
+}
+
+func lintError(message string) *LintResult {
+	return &LintResult{Error: true, Message: message}
 }
 
 func writeJson(res http.ResponseWriter, status int, obj interface{}) {
@@ -22,37 +26,38 @@ func writeJson(res http.ResponseWriter, status int, obj interface{}) {
 	res.Write(buf)
 }
 
-func formatWarnings(warnings []string) (fmted []string) {
+func fmtWarnings(warnings []string) (fmted string) {
+	slice := make([]string, 0)
 	for _, warn := range warnings {
-		fmted = append(fmted, strings.TrimPrefix(warn, "[WARNING]: "))
+		slice = append(slice, strings.TrimPrefix(warn, "[WARNING]: "))
 	}
-	return fmted
+	return strings.Join(slice, ". ")
 }
 
 func LintHandler(res http.ResponseWriter, req *http.Request) {
 	ast, err := parser.Parse(req.Body)
 	if err != nil {
-		writeJson(res, 400, &Error{Error: true, Messages: []string{err.Error()}})
+		writeJson(res, 400, lintError(err.Error()))
 		return
 	}
 
 	if len(ast.Warnings) > 0 {
-		writeJson(res, 400, &Error{Error: true, Messages: formatWarnings(ast.Warnings)})
+		writeJson(res, 400, lintError(fmtWarnings(ast.Warnings)))
 		return
 	}
 
 	if ast.AST.Children == nil {
-		writeJson(res, 400, &Error{Error: true, Messages: []string{"Dockerfile may not be empty"}})
+		writeJson(res, 400, lintError("Dockerfile may not be empty"))
 		return
 	}
 
 	_, _, err = instructions.Parse(ast.AST)
 	if err != nil {
-		writeJson(res, 400, &Error{Error: true, Messages: []string{err.Error()}})
+		writeJson(res, 400, lintError(err.Error()))
 		return
 	}
 
-	writeJson(res, 200, &Error{Error: false, Messages: []string{}})
+	writeJson(res, 200, &LintResult{Error: false})
 }
 
 func main() {
