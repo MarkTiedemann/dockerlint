@@ -35,6 +35,12 @@ func fmtWarnings(warnings []string) (fmted string) {
 }
 
 func LintHandler(res http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		res.WriteHeader(405)
+		res.Header().Set("Allow", "POST")
+		return
+	}
+
 	ast, err := parser.Parse(req.Body)
 	if err != nil {
 		writeJson(res, 400, lintError(err.Error()))
