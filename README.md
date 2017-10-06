@@ -2,7 +2,7 @@
 
 **Linting `Dockerfile`s as a service.**
 
-## Quickstart
+## Installation
 
 ```sh
 # clone repo
@@ -16,8 +16,6 @@ docker run --rm -it -p 3000:3000 dockerlint:0.2.0
 ```
 
 ## API
-
-**Base URL:** `http://localhost:3000`
 
 ### Request `POST /`
 
@@ -47,6 +45,8 @@ FROM golang
 
 *Example:*
 
+`curl --data-binary "FROM golang" $url`
+
 - *200*:
 
 ```json
@@ -54,6 +54,8 @@ FROM golang
   "error": false
 }
 ```
+
+`curl --data-binary "FROM" $url`
 
 - *400*:
 
