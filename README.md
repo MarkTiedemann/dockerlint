@@ -5,15 +5,13 @@
 ## Installation
 
 ```sh
-# clone repo
-git clone https://github.com/marktiedemann/dockerlint && cd dockerlint
-
-# build image
-docker build --rm -t dockerlint:0.2.0 .
-
-# run container
-docker run --rm -it -p 3000:3000 dockerlint:0.2.0
+go get github.com/marktiedemann/dockerlint
 ```
+
+## Flags
+
+- `-addr`: the address of the server, *default:* `:3000`
+- `-path`: the path of the handler, *default:* `/`
 
 ## API
 
@@ -45,7 +43,7 @@ FROM golang
 
 *Example:*
 
-`curl --data-binary "FROM golang" $url`
+`curl --data-binary "FROM golang" localhost:3000`
 
 - *200*:
 
@@ -55,7 +53,7 @@ FROM golang
 }
 ```
 
-`curl --data-binary "FROM" $url`
+`curl --data-binary "FROM" localhost:3000`
 
 - *400*:
 
@@ -70,7 +68,6 @@ FROM golang
 
  - [ ] Implement proper content-type negotiation
  - [ ] Support `plain/text` content-type
- - [ ] Support `-addr` and `-path` flags and env vars
  - [ ] Setup CI
  - [ ] Upload image to Docker Hub
  - [ ] Host demo instance
