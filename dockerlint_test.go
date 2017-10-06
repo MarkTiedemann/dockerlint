@@ -7,8 +7,6 @@ import (
 	"testing"
 )
 
-// TESTS
-
 func Test404(t *testing.T) {
 	makeTest(t, &Param{
 		path:         "/invalid-path",

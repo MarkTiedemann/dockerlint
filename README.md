@@ -39,6 +39,8 @@ FROM golang
 
 - `200 OK`: linting succeeded
 - `400 Bad Request`: linting failed
+- `404 Not Found`
+- `405 Method Not Allowed`
 
 **Headers:**
 
