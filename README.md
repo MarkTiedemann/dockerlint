@@ -64,6 +64,15 @@ FROM golang
 }
 ```
 
+## Todos
+
+ - [ ] Implement proper content-type negotiation
+ - [ ] Support `plain/text` content-type
+ - [ ] Support `-addr` and `-path` flags and env vars
+ - [ ] Setup CI
+ - [ ] Upload image to Docker Hub
+ - [ ] Host demo instance
+
 ## License
 
 [WTFPL](http://www.wtfpl.net/) – Do What the F*ck You Want to Public License.
