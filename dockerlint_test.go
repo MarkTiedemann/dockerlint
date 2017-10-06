@@ -72,7 +72,7 @@ func TestParsingError(t *testing.T) {
 	})
 }
 
-func TestSucess(t *testing.T) {
+func TestSuccess(t *testing.T) {
 	makeTest(t, &testParam{
 		method:       "POST",
 		body:         "FROM golang",
