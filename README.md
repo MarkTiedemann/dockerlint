@@ -8,6 +8,14 @@
 go get github.com/marktiedemann/dockerlint
 ```
 
+**From source:**
+
+```sh
+git clone https://github.com/marktiedemann/dockerlint
+cd dockerlint
+make install
+```
+
 ## Flags
 
 - `-addr`: the address of the server, *default:* `:3000`
