@@ -1,4 +1,4 @@
-# dockerlint
+# dockerlint [![Build Status](https://travis-ci.org/MarkTiedemann/dockerlint.svg?branch=master)](https://travis-ci.org/MarkTiedemann/dockerlint)
 
 **Linting `Dockerfile`s as a service.**
 
