@@ -12,23 +12,18 @@ import (
 )
 
 var (
-	addr string
-	path string
+	addr = flag.String("addr", ":3000", "the address of the server")
+	path = flag.String("path", "/", "the path of the handler")
 )
 
-func init() {
-	flag.StringVar(&addr, "addr", ":3000", "the address of the server")
-	flag.StringVar(&path, "path", "/", "the path of the handler")
-	flag.Parse()
-}
-
 func main() {
-	http.HandleFunc("/", LintHandler)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	flag.Parse()
+	http.HandleFunc("/", lintHandler)
+	log.Fatal(http.ListenAndServe(*addr, nil))
 }
 
-func LintHandler(res http.ResponseWriter, req *http.Request) {
-	if req.URL.Path != path {
+func lintHandler(res http.ResponseWriter, req *http.Request) {
+	if req.URL.Path != *path {
 		res.WriteHeader(404)
 		return
 	}
@@ -61,19 +56,19 @@ func LintHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	writeResult(res, 200, &LintResult{Error: false})
+	writeResult(res, 200, &lintResult{Error: false})
 }
 
-type LintResult struct {
+type lintResult struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message,omitempty"`
 }
 
-func newLintError(message string) *LintResult {
-	return &LintResult{Error: true, Message: message}
+func newLintError(message string) *lintResult {
+	return &lintResult{Error: true, Message: message}
 }
 
-func writeResult(res http.ResponseWriter, status int, result *LintResult) {
+func writeResult(res http.ResponseWriter, status int, result *lintResult) {
 	res.WriteHeader(status)
 	res.Header().Set("Content-Type", "application/json")
 	buf, _ := json.Marshal(result)

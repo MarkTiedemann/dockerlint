@@ -89,7 +89,7 @@ func makeTest(t *testing.T, param *Param) *httptest.ResponseRecorder {
 	equal(t, nil, err)
 
 	rec := httptest.NewRecorder()
-	handler := http.HandlerFunc(LintHandler)
+	handler := http.HandlerFunc(lintHandler)
 	handler.ServeHTTP(rec, req)
 
 	equal(t, param.expectedCode, rec.Code)
