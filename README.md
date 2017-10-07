@@ -78,7 +78,6 @@ FROM golang
 
  - [ ] Implement proper content-type negotiation
  - [ ] Support `plain/text` content-type
- - [ ] Upload image to Docker Hub
  - [ ] Host demo instance
 
 ## License
