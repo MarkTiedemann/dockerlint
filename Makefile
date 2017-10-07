@@ -6,12 +6,12 @@ DOCKER_TAG_LATEST := $(DOCKER_USER)/dockerlint:latest
 all: build
 
 deps:
-	go get $(GO_GET) github.com/docker/docker/builder/dockerfile/parser
-	go get $(GO_GET) github.com/docker/docker/builder/dockerfile/instructions
+	go get -d -v $(GO_GET) github.com/docker/docker/builder/dockerfile/parser
+	go get -d -v $(GO_GET) github.com/docker/docker/builder/dockerfile/instructions
 
 dev-deps: deps
-	go get $(GO_GET) github.com/golang/lint/golint
-	go get $(GO_GET) github.com/mitchellh/gox
+	go get -v $(GO_GET) github.com/golang/lint/golint
+	go get -v $(GO_GET) github.com/mitchellh/gox
 
 update-deps:
 	$(MAKE) dev-deps GO_GET=-u
