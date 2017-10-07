@@ -1,6 +1,7 @@
 .PHONY: all deps test build build-cross install clean docker-build docker-push
 
 DOCKER_TAG := $(DOCKER_USER)/dockerlint:$(shell cat version.txt)
+DOCKER_TAG_LATEST := $(DOCKER_USER)/dockerlint:latest
 
 all: build
 
@@ -28,8 +29,9 @@ clean:
 	rm -rf build
 
 docker-build:
-	docker build --rm -t $(DOCKER_TAG) .
+	docker build -t $(DOCKER_TAG) -t $(DOCKER_TAG_LATEST) .
 
 docker-push: docker-build
 	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
 	docker push $(DOCKER_TAG)
+	docker push $(DOCKER_TAG_LATEST)
