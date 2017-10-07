@@ -16,6 +16,12 @@ cd dockerlint
 make install
 ```
 
+**From Docker Hub ([marktiedemann/dockerlint](https://hub.docker.com/r/marktiedemann/dockerlint/)):**
+
+```sh
+docker pull marktiedemann/dockerlint
+```
+
 ## Flags
 
 - `-addr`: the address of the server, *default:* `:3000`
