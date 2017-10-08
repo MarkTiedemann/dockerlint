@@ -2,6 +2,10 @@
 
 **Linting `Dockerfile`s as a service.**
 
+- *Allows you to lint `Dockerfile`s with a simple HTTP API, without having `docker` installed.*
+- *Uses `docker`'s [`dockerfile/parser`](https://github.com/moby/moby/blob/master/builder/dockerfile/parser/parser.go) and [`dockerfile/instructions/parser`](https://github.com/moby/moby/blob/master/builder/dockerfile/instructions/parse.go) internally.*
+- *100% test coverage.*
+
 ## Installation
 
 ```sh

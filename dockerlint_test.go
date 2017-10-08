@@ -14,22 +14,30 @@ func TestMain(t *testing.T) {
 }
 
 func Test404(t *testing.T) {
-	makeTest(t, &Param{
+	makeTest(t, &param{
 		path:         "/invalid-path",
 		expectedCode: 404,
 	})
 }
 
 func Test405(t *testing.T) {
-	rec := makeTest(t, &Param{
+	rec := makeTest(t, &param{
 		method:       "PUT",
 		expectedCode: 405,
 	})
 	equal(t, "POST", rec.HeaderMap.Get("Allow"))
 }
 
+func Test400ParseError(t *testing.T) {
+	makeTest(t, &param{
+		body:         "FROM busybox\n\nENV PATH",
+		expectedCode: 400,
+		expectedBody: `{"error":true,"message":"ENV must have two arguments"}`,
+	})
+}
+
 func Test400ContinuationWarning(t *testing.T) {
-	makeTest(t, &Param{
+	makeTest(t, &param{
 		body:         "RUN \\\n\nexit",
 		expectedCode: 400,
 		expectedBody: `{"error":true,"message":"Empty continuation line found in:\n    RUN exit. Empty continuation lines will become errors in a future release."}`,
@@ -37,14 +45,14 @@ func Test400ContinuationWarning(t *testing.T) {
 }
 
 func Test400EmptyFile(t *testing.T) {
-	makeTest(t, &Param{
+	makeTest(t, &param{
 		expectedCode: 400,
 		expectedBody: `{"error":true,"message":"Dockerfile may not be empty"}`,
 	})
 }
 
-func Test400ParsingError(t *testing.T) {
-	makeTest(t, &Param{
+func Test400ParseInstructionError(t *testing.T) {
+	makeTest(t, &param{
 		body:         "FROM",
 		expectedCode: 400,
 		expectedBody: `{"error":true,"message":"Dockerfile parse error line 1: FROM requires either one or three arguments"}`,
@@ -52,7 +60,7 @@ func Test400ParsingError(t *testing.T) {
 }
 
 func Test200(t *testing.T) {
-	makeTest(t, &Param{
+	makeTest(t, &param{
 		body:         "FROM golang",
 		expectedBody: `{"error":false}`,
 	})
@@ -66,7 +74,7 @@ func equal(t *testing.T, expected interface{}, actual interface{}) {
 	}
 }
 
-type Param struct {
+type param struct {
 	path         string
 	method       string
 	body         string
@@ -74,32 +82,32 @@ type Param struct {
 	expectedBody string
 }
 
-func newParam(param *Param) *Param {
-	if param.path == "" {
-		param.path = "/"
+func newParam(p *param) *param {
+	if p.path == "" {
+		p.path = "/"
 	}
-	if param.method == "" {
-		param.method = "POST"
+	if p.method == "" {
+		p.method = "POST"
 	}
-	if param.expectedCode == 0 {
-		param.expectedCode = 200
+	if p.expectedCode == 0 {
+		p.expectedCode = 200
 	}
-	return param
+	return p
 }
 
-func makeTest(t *testing.T, param *Param) *httptest.ResponseRecorder {
-	param = newParam(param)
+func makeTest(t *testing.T, p *param) *httptest.ResponseRecorder {
+	p = newParam(p)
 
-	reqBody := bytes.NewReader([]byte(param.body))
-	req, err := http.NewRequest(param.method, param.path, reqBody)
+	reqBody := bytes.NewReader([]byte(p.body))
+	req, err := http.NewRequest(p.method, p.path, reqBody)
 	equal(t, nil, err)
 
 	rec := httptest.NewRecorder()
 	handler := http.HandlerFunc(lintHandler)
 	handler.ServeHTTP(rec, req)
 
-	equal(t, param.expectedCode, rec.Code)
-	equal(t, param.expectedBody, rec.Body.String())
+	equal(t, p.expectedCode, rec.Code)
+	equal(t, p.expectedBody, rec.Body.String())
 
 	return rec
 }
